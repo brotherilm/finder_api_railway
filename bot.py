@@ -1,3 +1,4 @@
+# bot.py (File asli Anda dengan sedikit modifikasi)
 import os
 import logging
 from telegram import Update
@@ -6,17 +7,17 @@ import asyncpg
 from datetime import datetime
 from urllib.parse import quote
 
-# Konfigurasi Bot
-TOKEN = "8186303125:AAEU3cKzbllqtiot55iRbDf0Q5yK44EelGA"
+# Konfigurasi Bot - Gunakan environment variables
+TOKEN = os.getenv("TELEGRAM_TOKEN", "8186303125:AAEU3cKzbllqtiot55iRbDf0Q5yK44EelGA")
 BOT_USERNAME = "@StoreDB_airdropbot"
 
-# Konfigurasi Database
+# Konfigurasi Database - Gunakan environment variables
 DB_CONFIG = {
-    "user": "neondb_owner",
-    "password": "npg_ntWwHqA9dKI2",
-    "database": "neondb",
-    "host": "ep-lucky-shape-a14jznh2-pooler.ap-southeast-1.aws.neon.tech",
-    "port": "5432",
+    "user": os.getenv("DB_USER", "neondb_owner"),
+    "password": os.getenv("DB_PASSWORD", "npg_ntWwHqA9dKI2"),
+    "database": os.getenv("DB_NAME", "neondb"),
+    "host": os.getenv("DB_HOST", "ep-lucky-shape-a14jznh2-pooler.ap-southeast-1.aws.neon.tech"),
+    "port": os.getenv("DB_PORT", "5432"),
     "ssl": "require"
 }
 
@@ -146,5 +147,11 @@ if __name__ == '__main__':
     ))
     app.add_error_handler(error)
 
+    # Gunakan PORT dari environment variable untuk Railway
+    PORT = int(os.getenv("PORT", "8000"))
+    
     logger.info(f'Bot sedang berjalan... {BOT_USERNAME}')
+    logger.info(f'Listening on port {PORT}')
+    
+    # Untuk Railway, gunakan polling (bukan webhook)
     app.run_polling()
